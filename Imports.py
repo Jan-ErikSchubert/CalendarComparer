@@ -32,14 +32,10 @@ class EventList:
 
 
 def handleURL(inputurl):
-    #try:
         cal_i = requests.get(inputurl).text
-
         split_overhead = cal_i.split("END:VTIMEZONE")
         split_events = split_overhead[1].split("BEGIN:VEVENT")
         return split_events
-    #except:
-        #return
 
 
 class myThread(threading.Thread):
@@ -70,8 +66,6 @@ def handleEvents(eventlist):
                 remote = True
         if not remote and stime != 0:
             eventlistobject.handle(date, stime, endt)
-    #if len(eventlistobject.listOfEvents) == 0:
-        #raise ValueError
     return eventlistobject
 
 

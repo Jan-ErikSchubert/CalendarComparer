@@ -1,6 +1,7 @@
-
 import requests
 import threading
+
+
 class Eventday:
     def __init__(self, datee, starttime, endtime):
         self.date = datee
@@ -15,30 +16,30 @@ class Eventday:
         if newstarttime < self.starttime:
             self.starttime = newstarttime
 
+
 class EventList:
     def __init__(self):
         self.listOfEvents = []
 
     def handle(self, datee, starttime, endtime):
         binResult = binarySearch(self.listOfEvents, datee)
-        if (binResult != -1):
+        if binResult != -1:
             self.listOfEvents[binResult].updateStartTime(starttime)
             self.listOfEvents[binResult].updateEndTime(endtime)
 
         else:
             self.listOfEvents.append(Eventday(datee, starttime, endtime))
 
+
 def handleURL(inputurl):
-    try:
+    #try:
         cal_i = requests.get(inputurl).text
 
         split_overhead = cal_i.split("END:VTIMEZONE")
         split_events = split_overhead[1].split("BEGIN:VEVENT")
         return split_events
-    except:
-        return
-
-
+    #except:
+        #return
 
 
 class myThread(threading.Thread):
@@ -67,24 +68,23 @@ def handleEvents(eventlist):
                 stime = line.split(":")[1].split("T")[1]
             if "Raum Online" in line:
                 remote = True
-        if not remote and stime !=0:
-                eventlistobject.handle(date, stime, endt)
-    if (len(eventlistobject.listOfEvents) == 0):
-        raise ValueError
+        if not remote and stime != 0:
+            eventlistobject.handle(date, stime, endt)
+    #if len(eventlistobject.listOfEvents) == 0:
+        #raise ValueError
     return eventlistobject
 
 
 def binarySearch(list, value):
     low = 0
     high = len(list) - 1
-    middle = 0
 
     while low <= high:
-        middle = (high + low) //2
+        middle = (high + low) // 2
         if list[middle].date < value:
-            low = middle +1
+            low = middle + 1
         elif list[middle].date > value:
-            high = middle -1
+            high = middle - 1
         else:
             return middle
     return -1

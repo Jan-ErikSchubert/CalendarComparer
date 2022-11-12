@@ -1,3 +1,5 @@
+import sys
+
 import requests
 import Imports
 import threading
@@ -16,19 +18,12 @@ try:
     EventListObject = Imports.handleEvents(split_events1)
     EventListObject2 = Imports.handleEvents(split_events2)
 
-
     for day in EventListObject.listOfEvents:
         for day2 in EventListObject2.listOfEvents:
-            if (day.date == day2.date):
-                if (day.starttime == day2.starttime and day.endtime == day2.endtime):
+            if day.date == day2.date:
+                if day.starttime == day2.starttime and day.endtime == day2.endtime:
                     print("Match: " + day.date)
 except ValueError:
     print("At least one of the provided Calendars was empty! Program aborted.")
 except:
     print("At least one of the provided URLs was not in the needed format! Program aborted.")
-
-
-
-
-
-

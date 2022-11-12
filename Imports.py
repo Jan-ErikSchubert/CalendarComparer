@@ -1,3 +1,4 @@
+
 import requests
 import threading
 class Eventday:
@@ -11,8 +12,6 @@ class Eventday:
             self.endtime = newendtime
 
     def updateStartTime(self, newstarttime):
-        #print("nst", newstarttime)
-        #print("st", self.starttime)
         if newstarttime < self.starttime:
             self.starttime = newstarttime
 
@@ -21,7 +20,6 @@ class EventList:
         self.listOfEvents = []
 
     def handle(self, datee, starttime, endtime):
-        #print(date, starttime, endtime)
         binResult = binarySearch(self.listOfEvents, datee)
         if (binResult != -1):
             self.listOfEvents[binResult].updateStartTime(starttime)
@@ -29,13 +27,19 @@ class EventList:
 
         else:
             self.listOfEvents.append(Eventday(datee, starttime, endtime))
-                    #print("Nicht vorhanden")
 
 def handleURL(inputurl):
-    cal_i = requests.get(inputurl).text
-    split_overhead = cal_i.split("END:VTIMEZONE")
-    split_events = split_overhead[1].split("BEGIN:VEVENT")
-    return split_events
+    try:
+        cal_i = requests.get(inputurl).text
+
+        split_overhead = cal_i.split("END:VTIMEZONE")
+        split_events = split_overhead[1].split("BEGIN:VEVENT")
+        return split_events
+    except:
+        return
+
+
+
 
 class myThread(threading.Thread):
     def __init__(self, url):
@@ -63,9 +67,10 @@ def handleEvents(eventlist):
                 stime = line.split(":")[1].split("T")[1]
             if "Raum Online" in line:
                 remote = True
-            #print(date, endt, stime)
         if not remote and stime !=0:
                 eventlistobject.handle(date, stime, endt)
+    if (len(eventlistobject.listOfEvents) == 0):
+        raise ValueError
     return eventlistobject
 
 
